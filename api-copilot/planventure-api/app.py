@@ -3,6 +3,8 @@ from flask_cors import CORS
 from src.config import Config
 from src.models import db
 from src.routes.main import main
+from src.routes.users import users
+from src.routes.trips import trips
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +16,8 @@ def create_app():
     
     # Register blueprints
     app.register_blueprint(main)
+    app.register_blueprint(users)
+    app.register_blueprint(trips)
     
     # Create database tables
     with app.app_context():
