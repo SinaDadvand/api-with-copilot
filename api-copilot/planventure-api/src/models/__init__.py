@@ -48,7 +48,9 @@ class User(db.Model):
             return False
         if datetime.now(datetime.timezone.utc) > self.reset_token_expires:
             return False
-        return self.reset_token_hash == hash_token(token)    def to_dict(self):
+        return self.reset_token_hash == hash_token(token)    
+    
+    def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,

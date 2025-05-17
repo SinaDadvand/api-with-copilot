@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, current_app
 from src.models import db, User
 from src.services.jwt_manager import JWTManager
 from src.services.email_service import send_verification_email
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import secrets
 
 auth = Blueprint('auth', __name__)
@@ -24,12 +24,12 @@ def register():
         return jsonify({'error': 'Email already registered'}), 400
     
     # Create new user
-    user = User(
+    user = User(        
         username=data['username'],
         email=data['email'],
         email_verified=False,
         email_verification_token=secrets.token_urlsafe(32),
-        email_verification_sent_at=datetime.now(datetime.timezone.utc)
+        email_verification_sent_at=datetime.now(timezone.utc)
     )
     user.set_password(data['password'])
     
@@ -65,7 +65,7 @@ def verify_email():
         return jsonify({'error': 'Invalid verification token'}), 400
     
     # Check if token has expired (24 hours)
-    token_age = datetime.now(datetime.timezone.utc) - user.email_verification_sent_at
+    token_age = datetime.now(timezone.utc) - user.email_verification_sent_at
     if token_age > timedelta(seconds=current_app.config['EMAIL_VERIFICATION_TIMEOUT']):
         return jsonify({'error': 'Verification token has expired'}), 400
     
@@ -105,7 +105,7 @@ def resend_verification():
     
     # Generate new verification token
     user.email_verification_token = secrets.token_urlsafe(32)
-    user.email_verification_sent_at = datetime.now(datetime.timezone.utc)
+    user.email_verification_sent_at = datetime.now(timezone.utc)
     db.session.commit()
     
     # Send new verification email
