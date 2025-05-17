@@ -15,6 +15,9 @@ class User(db.Model):
     password_salt = db.Column(db.String(64), nullable=False)  # Store salt separately
     reset_token_hash = db.Column(db.String(64))  # For password reset functionality
     reset_token_expires = db.Column(db.DateTime)
+    email_verified = db.Column(db.Boolean, default=False)
+    email_verification_token = db.Column(db.String(64))
+    email_verification_sent_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(datetime.timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(datetime.timezone.utc), onupdate=lambda: datetime.now(datetime.timezone.utc))
     last_login = db.Column(db.DateTime)
@@ -45,13 +48,12 @@ class User(db.Model):
             return False
         if datetime.now(datetime.timezone.utc) > self.reset_token_expires:
             return False
-        return self.reset_token_hash == hash_token(token)
-
-    def to_dict(self):
+        return self.reset_token_hash == hash_token(token)    def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,
             'email': self.email,
+            'email_verified': self.email_verified,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat(),
             'last_login': self.last_login.isoformat() if self.last_login else None
