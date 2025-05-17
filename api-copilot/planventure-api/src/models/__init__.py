@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 from .user_utils import hash_password, verify_password
 
@@ -18,8 +18,8 @@ class User(db.Model):
     email_verified = db.Column(db.Boolean, default=False)
     email_verification_token = db.Column(db.String(64))
     email_verification_sent_at = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, default=lambda: datetime.now(datetime.timezone.utc))
-    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(datetime.timezone.utc), onupdate=lambda: datetime.now(datetime.timezone.utc))
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     last_login = db.Column(db.DateTime)
 
     def __repr__(self):

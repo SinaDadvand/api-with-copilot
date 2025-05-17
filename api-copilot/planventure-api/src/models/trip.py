@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from src.models import db
 
 class Trip(db.Model):
@@ -11,8 +11,8 @@ class Trip(db.Model):
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     itinerary = db.Column(db.JSON)  # Store itinerary as JSON for flexibility
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationship with User model
     user = db.relationship('User', backref=db.backref('trips', lazy=True))
