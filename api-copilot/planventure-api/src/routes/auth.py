@@ -99,9 +99,11 @@ def verify_email_from_link():
     
     if not user:
         return "Invalid verification token", 400
-    
-    # Check if token has expired (24 hours)
-    token_age = datetime.now(timezone.utc) - user.email_verification_sent_at
+      # Check if token has expired (24 hours)
+    sent_at = user.email_verification_sent_at
+    if sent_at.tzinfo is None:  # If timestamp is naive, make it timezone-aware
+        sent_at = sent_at.replace(tzinfo=timezone.utc)
+    token_age = datetime.now(timezone.utc) - sent_at
     if token_age > timedelta(seconds=current_app.config['EMAIL_VERIFICATION_TIMEOUT']):
         return "Verification token has expired", 400
     
