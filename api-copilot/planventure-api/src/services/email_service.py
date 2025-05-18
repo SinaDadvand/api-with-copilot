@@ -33,8 +33,8 @@ def send_email(subject: str, recipients: list, html_body: str, text_body: str = 
     ).start()
 
 def send_verification_email(user_email: str, token: str):
-    """Send an email verification link."""
-    verification_url = f"{current_app.config['FRONTEND_URL']}/verify-email?token={token}"
+    """Send an email verification link."""    # For development, use direct API URL since we don't have a frontend yet
+    verification_url = f"http://127.0.0.1:5000/auth/verify-email?token={token}"
     
     subject = "Verify your PlanVenture account"
     html_body = f"""

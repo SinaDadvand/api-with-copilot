@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import Blueprint, jsonify, request, current_app, render_template_string
 from src.models import db, User
 from src.services.jwt_manager import JWTManager
 from src.services.email_service import send_verification_email
@@ -85,6 +85,72 @@ def verify_email():
         'refresh_token': refresh_token,
         'user': user.to_dict()
     }), 200
+
+@auth.route('/verify-email', methods=['GET'])
+def verify_email_from_link():
+    """Handle email verification from email link."""
+    token = request.args.get('token')
+    
+    if not token:
+        return "Verification token is missing", 400
+    
+    # Find user by verification token
+    user = User.query.filter_by(email_verification_token=token).first()
+    
+    if not user:
+        return "Invalid verification token", 400
+    
+    # Check if token has expired (24 hours)
+    token_age = datetime.now(timezone.utc) - user.email_verification_sent_at
+    if token_age > timedelta(seconds=current_app.config['EMAIL_VERIFICATION_TIMEOUT']):
+        return "Verification token has expired", 400
+    
+    # Mark email as verified
+    user.email_verified = True
+    user.email_verification_token = None
+    user.email_verification_sent_at = None
+    db.session.commit()
+    
+    # Return a nice HTML page for success
+    success_html = """
+    <html>
+        <head>
+            <title>Email Verification Successful</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #f5f5f5;
+                }
+                .container {
+                    text-align: center;
+                    padding: 2rem;
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #2c974b;
+                    margin-bottom: 1rem;
+                }
+                p {
+                    color: #24292f;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>✓ Email Verified Successfully!</h1>
+                <p>Your email has been verified. You can now close this window and log in to your account.</p>
+            </div>
+        </body>
+    </html>
+    """
+    return render_template_string(success_html)
 
 @auth.route('/resend-verification', methods=['POST'])
 def resend_verification():
