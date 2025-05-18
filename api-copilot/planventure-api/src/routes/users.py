@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from src.models import db, User
 from src.services.jwt_manager import JWTManager
 from src.services.auth import token_required
-from datetime import datetime
+from datetime import datetime, timezone
 import jwt
 
 users = Blueprint('users', __name__)
@@ -49,9 +49,8 @@ def login():
     user = User.query.filter_by(username=data['username']).first()
     if not user or not user.check_password(data['password']):
         return jsonify({'error': 'Invalid username or password'}), 401
-    
-    # Update last login timestamp
-    user.last_login = datetime.now(datetime.timezone.utc)
+      # Update last login timestamp
+    user.last_login = datetime.now(timezone.utc)
     db.session.commit()
     
     # Generate tokens

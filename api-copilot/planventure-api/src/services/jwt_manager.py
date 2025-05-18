@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import jwt
 from typing import Optional, Dict, Any
 from flask import current_app
@@ -20,10 +20,9 @@ class JWTManager:
         if expires_delta is None:
             expires_delta = timedelta(days=1)  # Default to 1 day expiration
             
-        payload = {
-            'user_id': user.id,
-            'exp': datetime.now(datetime.timezone.utc) + expires_delta,
-            'iat': datetime.now(datetime.timezone.utc)
+        payload = {            'user_id': user.id,
+            'exp': datetime.now(timezone.utc) + expires_delta,
+            'iat': datetime.now(timezone.utc)
         }
         
         return jwt.encode(
@@ -43,10 +42,9 @@ class JWTManager:
         Returns:
             str: The encoded refresh token
         """
-        payload = {
-            'user_id': user.id,
-            'exp': datetime.utcnow() + timedelta(days=30),  # 30 days expiration
-            'iat': datetime.utcnow(),
+        payload = {            'user_id': user.id,
+            'exp': datetime.now(timezone.utc) + timedelta(days=30),  # 30 days expiration
+            'iat': datetime.now(timezone.utc),
             'type': 'refresh'
         }
         
