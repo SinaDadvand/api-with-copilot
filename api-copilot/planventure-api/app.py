@@ -14,7 +14,13 @@ def create_app():
     app.config.from_object(Config)
     
     # Initialize extensions
-    CORS(app)
+    CORS(app, resources={
+        r"/*": {
+            "origins": app.config.get('CORS_ORIGINS', 'http://localhost:3000').split(','),
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Authorization", "Content-Type"]
+        }
+    })
     db.init_app(app)
     mail.init_app(app)
     

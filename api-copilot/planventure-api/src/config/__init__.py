@@ -9,6 +9,9 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///planventure.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    # CORS settings
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000')  # Comma-separated list of allowed origins
+    
     # JWT settings
     JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 86400))  # 24 hours in seconds
     JWT_REFRESH_TOKEN_EXPIRES = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 2592000))  # 30 days in seconds
