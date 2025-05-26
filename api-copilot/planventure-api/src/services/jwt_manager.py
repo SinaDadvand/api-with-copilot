@@ -19,10 +19,11 @@ class JWTManager:
         """
         if expires_delta is None:
             expires_delta = timedelta(days=1)  # Default to 1 day expiration
-            
-        payload = {            'user_id': user.id,
+        payload = {
+            'user_id': user.id,
             'exp': datetime.now(timezone.utc) + expires_delta,
-            'iat': datetime.now(timezone.utc)
+            'iat': datetime.now(timezone.utc),
+            'type': 'access'  # Add type field for access tokens
         }
         
         return jwt.encode(

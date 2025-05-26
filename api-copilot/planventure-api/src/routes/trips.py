@@ -5,6 +5,16 @@ from datetime import datetime
 
 trips = Blueprint('trips', __name__)
 
+def validate_trip_dates(start_date, end_date):
+    try:
+        start = datetime.strptime(start_date, '%Y-%m-%d')
+        end = datetime.strptime(end_date, '%Y-%m-%d')
+        if end < start:
+            return False, "End date must be after start date"
+        return True, None
+    except ValueError:
+        return False, "Invalid date format. Use YYYY-MM-DD"
+
 @trips.route('/trips', methods=['POST'])
 @token_required
 def create_trip(current_user):
@@ -14,6 +24,11 @@ def create_trip(current_user):
     required_fields = ['title', 'destination', 'start_date', 'end_date']
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
+    
+    # Validate dates
+    is_valid, error_msg = validate_trip_dates(data['start_date'], data['end_date'])
+    if not is_valid:
+        return jsonify({'error': error_msg}), 400
     
     try:
         # Parse dates
@@ -51,8 +66,24 @@ def get_trip(current_user, trip_id):
 @trips.route('/my/trips', methods=['GET'])
 @token_required
 def get_user_trips(current_user):
-    trips = Trip.query.filter_by(user_id=current_user.id).all()
-    return jsonify([trip.to_dict() for trip in trips])
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    
+    # Cap the per_page to prevent performance issues
+    per_page = min(per_page, 50)
+    
+    trips = Trip.query.filter_by(user_id=current_user.id)\
+        .order_by(Trip.start_date.desc())\
+        .paginate(page=page, per_page=per_page, error_out=False)
+    
+    return jsonify({
+        'trips': [trip.to_dict() for trip in trips.items],
+        'total': trips.total,
+        'pages': trips.pages,
+        'current_page': trips.page,
+        'has_next': trips.has_next,
+        'has_prev': trips.has_prev
+    })
 
 @trips.route('/trips/<int:trip_id>', methods=['PUT'])
 @token_required
@@ -62,24 +93,42 @@ def update_trip(current_user, trip_id):
     # Check if the trip belongs to the current user
     if trip.user_id != current_user.id:
         return jsonify({'error': 'Unauthorized access'}), 403
-        
+    
     data = request.get_json()
     
-    # Update fields if they exist in the request
-    if 'title' in data:
-        trip.title = data['title']
-    if 'destination' in data:
-        trip.destination = data['destination']
-    if 'start_date' in data:
-        trip.start_date = datetime.fromisoformat(data['start_date'])
-    if 'end_date' in data:
-        trip.end_date = datetime.fromisoformat(data['end_date'])
-    if 'latitude' in data:
-        trip.latitude = data['latitude']
-    if 'longitude' in data:
-        trip.longitude = data['longitude']
-    if 'itinerary' in data:
-        trip.itinerary = data['itinerary']
+    # If dates are being updated, validate them
+    if 'start_date' in data and 'end_date' in data:
+        is_valid, error_msg = validate_trip_dates(data['start_date'], data['end_date'])
+        if not is_valid:
+            return jsonify({'error': error_msg}), 400
+    elif 'start_date' in data:
+        is_valid, error_msg = validate_trip_dates(data['start_date'], trip.end_date)
+        if not is_valid:
+            return jsonify({'error': error_msg}), 400
+    elif 'end_date' in data:
+        is_valid, error_msg = validate_trip_dates(trip.start_date, data['end_date'])
+        if not is_valid:
+            return jsonify({'error': error_msg}), 400
+    
+    # Update fields
+    for field in ['title', 'description', 'start_date', 'end_date', 'location']:
+        if field in data:
+            setattr(trip, field, data[field])
     
     db.session.commit()
+    
     return jsonify(trip.to_dict())
+
+@trips.route('/trips/<int:trip_id>', methods=['DELETE'])
+@token_required
+def delete_trip(current_user, trip_id):
+    trip = Trip.query.get_or_404(trip_id)
+    
+    # Check if the trip belongs to the current user
+    if trip.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized access'}), 403
+        
+    db.session.delete(trip)
+    db.session.commit()
+    
+    return jsonify({'message': 'Trip deleted successfully'}), 200
