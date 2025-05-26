@@ -102,22 +102,31 @@ def update_trip(current_user, trip_id):
         if not is_valid:
             return jsonify({'error': error_msg}), 400
     elif 'start_date' in data:
-        is_valid, error_msg = validate_trip_dates(data['start_date'], trip.end_date)
+        is_valid, error_msg = validate_trip_dates(data['start_date'], trip.end_date.strftime('%Y-%m-%d'))
         if not is_valid:
             return jsonify({'error': error_msg}), 400
     elif 'end_date' in data:
-        is_valid, error_msg = validate_trip_dates(trip.start_date, data['end_date'])
+        is_valid, error_msg = validate_trip_dates(trip.start_date.strftime('%Y-%m-%d'), data['end_date'])
         if not is_valid:
             return jsonify({'error': error_msg}), 400
     
-    # Update fields
-    for field in ['title', 'description', 'start_date', 'end_date', 'location']:
-        if field in data:
-            setattr(trip, field, data[field])
-    
-    db.session.commit()
-    
-    return jsonify(trip.to_dict())
+    try:
+        # Convert date strings to datetime objects if they exist in the data
+        if 'start_date' in data:
+            data['start_date'] = datetime.fromisoformat(data['start_date'])
+        if 'end_date' in data:
+            data['end_date'] = datetime.fromisoformat(data['end_date'])
+            
+        # Update fields
+        for field in ['title', 'description', 'start_date', 'end_date', 'location']:
+            if field in data:
+                setattr(trip, field, data[field])
+        
+        db.session.commit()
+        
+        return jsonify(trip.to_dict())
+    except ValueError:
+        return jsonify({'error': 'Invalid date format. Use ISO format (YYYY-MM-DD)'}), 400
 
 @trips.route('/trips/<int:trip_id>', methods=['DELETE'])
 @token_required
