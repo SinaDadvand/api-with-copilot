@@ -20,8 +20,8 @@ def register():
     # Check if username or email already exists
     if User.query.filter_by(username=data['username']).first():
         return jsonify({'error': 'Username already taken'}), 400
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({'error': 'Email already registered'}), 400
+    # if User.query.filter_by(email=data['email']).first():
+    #     return jsonify({'error': 'Email already registered'}), 400
     
     # Create new user
     user = User(        
