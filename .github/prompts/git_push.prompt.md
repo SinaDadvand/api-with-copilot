@@ -5,6 +5,9 @@ tools: ['githubRepo', 'codebase']
 
 Save the recent changes made in the codebase.
 Use semi-colons to separate the commands.
+
+# DO NOT RUN 'git commit' or 'git push' without my confirmation.
+
 # First, check the status of the git repository to see if there are any changes.
 git status;
 
