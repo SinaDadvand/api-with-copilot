@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -11,12 +11,25 @@ const getAuthHeaders = () => {
 const handleResponse = async (response) => {
   if (response.status === 401) {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     window.location.href = '/login';
     throw new Error('Session expired. Please login again.');
   }
 
+  if (response.status === 403) {
+    throw new Error('Access denied. You do not have permission to perform this action.');
+  }
+
   if (response.status === 404) {
-    throw new Error('Trip not found');
+    throw new Error('The requested resource was not found.');
+  }
+
+  if (response.status === 429) {
+    throw new Error('Too many requests. Please try again later.');
+  }
+
+  if (response.status >= 500) {
+    throw new Error('Server error. Please try again later.');
   }
 
   const data = await response.json();

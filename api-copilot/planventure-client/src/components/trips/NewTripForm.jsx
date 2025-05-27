@@ -30,13 +30,11 @@ const NewTripForm = () => {
     setLoading(true);
     setError('');
 
-    try {
-      const tripData = {
+    try {      const tripData = {
         title: formData.title,
         destination: formData.destination,
         start_date: formData.startDate.format('YYYY-MM-DD'),
-        end_date: formData.endDate.format('YYYY-MM-DD'),
-        status: 'Upcoming'
+        end_date: formData.endDate.format('YYYY-MM-DD')
       };
 
       const response = await tripService.createTrip(tripData);
@@ -60,10 +58,9 @@ const NewTripForm = () => {
     return formData.endDate.isAfter(formData.startDate) || 
            formData.endDate.isSame(formData.startDate);
   };
-
   const isFormValid = () => {
-    return formData.title && 
-           formData.destination && 
+    return formData.title?.trim().length >= 3 && 
+           formData.destination?.trim().length >= 2 && 
            isDateRangeValid() &&
            !loading;
   };
@@ -87,15 +84,15 @@ const NewTripForm = () => {
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
-        )}
-
-        <TextField
+        )}        <TextField
           fullWidth
           label="Trip Title"
           name="title"
           value={formData.title}
           onChange={handleChange}
           required
+          error={formData.title && formData.title.trim().length < 3}
+          helperText={formData.title && formData.title.trim().length < 3 ? 'Title must be at least 3 characters long' : ''}
         />
 
         <TextField
@@ -105,6 +102,8 @@ const NewTripForm = () => {
           value={formData.destination}
           onChange={handleChange}
           required
+          error={formData.destination && formData.destination.trim().length < 2}
+          helperText={formData.destination && formData.destination.trim().length < 2 ? 'Destination must be at least 2 characters long' : ''}
         />
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>

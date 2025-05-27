@@ -71,10 +71,9 @@ const EditTripForm = ({ trip }) => {
     return formData.endDate.isAfter(formData.startDate) || 
            formData.endDate.isSame(formData.startDate);
   };
-
   const isFormValid = () => {
-    return formData.title?.trim() && 
-           formData.destination?.trim() && 
+    return formData.title?.trim().length >= 3 && 
+           formData.destination?.trim().length >= 2 && 
            isDateRangeValid() &&
            !loading;
   };
