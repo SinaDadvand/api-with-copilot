@@ -1,8 +1,15 @@
-# Planventure API
+# Planventure - Full Stack Trip Planning Application
 
-A Flask-based REST API for trip planning with JWT authentication and CORS support.
+A comprehensive trip planning application with a Flask REST API backend and React frontend.
 
-## Features
+## Project Structure
+
+This repository contains two main components:
+
+- **`planventure-api/`** - Flask-based REST API backend
+- **`planventure-client/`** - React frontend application
+
+## Backend Features (Flask API)
 
 - 🔐 JWT Authentication
 - 🌍 CORS support for frontend integration
@@ -10,55 +17,113 @@ A Flask-based REST API for trip planning with JWT authentication and CORS suppor
 - 🗄️ SQLite database with proper date handling
 - 📝 Comprehensive API documentation
 
+## Frontend Features (React Client)
+
+- ⚛️ Modern React application built with Vite
+- 🎨 Responsive UI with custom theming
+- 🔐 JWT-based authentication flow
+- 📱 Trip management interface
+- 📅 Itinerary planning components
+- 🚀 Fast development with Vite build tool
+
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- pip (Python package manager)
+- **Python 3.8 or higher** (for backend)
+- **Node.js 16.0 or higher** (for frontend)
+- **npm or yarn** (package managers)
+- **pip** (Python package manager)
 
-### Installation
+### Full Stack Setup (Backend + Frontend)
 
-1. Clone the repository:
+#### Step 1: Clone the Repository
 ```bash
 git clone <repository-url>
 cd planventure-api
 ```
 
-2. Create a virtual environment and activate it:
+#### Step 2: Backend Setup (Flask API)
+
+1. **Navigate to the API directory:**
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd planventure-api
 ```
 
-3. Install dependencies:
+2. **Create and activate virtual environment:**
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+```
+
+3. **Install Python dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
-Create a `.env` file in the root directory with the following variables:
+4. **Set up environment variables:**
+Create a `.env` file in the `planventure-api` directory:
 ```env
 FLASK_APP=app.py
 FLASK_ENV=development
-SECRET_KEY=your-secret-key
-JWT_SECRET_KEY=your-jwt-secret-key
+SECRET_KEY=your-secret-key-here
+JWT_SECRET_KEY=your-jwt-secret-key-here
 CORS_ORIGINS=http://localhost:3000
 ```
 
-### Running the Application
-
-1. Initialize the database:
+5. **Initialize the database:**
 ```bash
 flask db upgrade
 ```
 
-2. Start the development server:
+6. **Start the Flask development server:**
 ```bash
 flask run
 ```
 
-The API will be available at `http://localhost:5000`.
+The API will be available at `http://localhost:5000`
+
+#### Step 3: Frontend Setup (React Client)
+
+1. **Open a new terminal** and navigate to the client directory:
+```bash
+cd planventure-client
+```
+
+2. **Install Node.js dependencies:**
+```bash
+npm install
+```
+
+3. **Start the React development server:**
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000`
+
+### Quick Start Commands
+
+After initial setup, use these commands to start both servers:
+
+**Terminal 1 (Backend):**
+```bash
+cd planventure-api
+venv\Scripts\activate  # Windows
+flask run
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd planventure-client
+npm run dev
+```
 
 ## API Documentation
 
@@ -74,7 +139,7 @@ Register a new user.
 }
 ```
 
-#### POST /auth/login
+#### POST /login
 Login and receive JWT tokens.
 ```json
 {
@@ -164,6 +229,65 @@ The API uses JWT tokens for authentication with the following features:
 ## Database
 
 The application uses SQLite as the database backend with proper date handling for trip dates. All dates are stored and returned in ISO format (YYYY-MM-DD).
+
+## Frontend Development
+
+### Project Structure
+The React frontend (`planventure-client/`) includes:
+
+- **Components**: Reusable UI components organized by feature
+  - `auth/` - Login and registration forms
+  - `trips/` - Trip management components
+  - `itinerary/` - Itinerary planning interface
+  - `navigation/` - Navigation and layout components
+- **Services**: API communication layer
+- **Context**: React Context for state management
+- **Routes**: Application routing configuration
+- **Layouts**: Page layout components
+
+### Development Tools
+- **Vite**: Fast build tool and development server
+- **ESLint**: Code linting and formatting
+- **React Router**: Client-side routing
+- **CSS**: Custom styling with responsive design
+
+### Frontend Environment Variables
+Create a `.env` file in the `planventure-client` directory:
+```env
+VITE_API_BASE_URL=http://localhost:5000
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### "vite is not recognized"
+If you get this error when trying to run the frontend:
+1. Make sure you're in the `planventure-client` directory
+2. Run `npm install` to install dependencies
+3. Use `npm run dev` instead of `vite` directly
+
+#### CORS Issues
+If you get CORS errors:
+1. Ensure backend is running on `http://localhost:5000`
+2. Ensure frontend is running on `http://localhost:3000`
+3. Check the `CORS_ORIGINS` environment variable in backend `.env`
+
+#### Database Issues
+If database errors occur:
+1. Delete the `instance/planventure.db` file
+2. Run `flask db upgrade` again
+
+#### Port Conflicts
+If ports are already in use:
+- **Backend**: Add `--port 5001` to flask run command
+- **Frontend**: Add `--port 3001` to dev command and update CORS_ORIGINS
+
+### Development Workflow
+1. Start backend server first: `flask run`
+2. Start frontend server: `npm run dev`
+3. Open browser to `http://localhost:3000`
+4. Backend API accessible at `http://localhost:5000`
 
 ## Contributing
 
