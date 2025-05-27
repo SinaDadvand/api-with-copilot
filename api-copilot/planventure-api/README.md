@@ -102,7 +102,7 @@ Create a new trip.
     "description": "string",
     "start_date": "YYYY-MM-DD",
     "end_date": "YYYY-MM-DD",
-    "location": "string"
+    "destination": "string"
 }
 ```
 
@@ -114,7 +114,7 @@ Update a trip. All fields are optional.
     "description": "string",
     "start_date": "YYYY-MM-DD",
     "end_date": "YYYY-MM-DD",
-    "location": "string"
+    "destination": "string"
 }
 ```
 

@@ -44,7 +44,6 @@ export const api = {
     });
     return handleResponse(response);
   },
-
   put: async (endpoint, data) => {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: 'PUT',
@@ -54,9 +53,16 @@ export const api = {
     return handleResponse(response);
   },
 
+  delete: async (endpoint) => {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(response);
+  },
   auth: {
     login: async (credentials) => {
-      return api.post('/auth/login', credentials);
+      return api.post('/login', credentials);
     },
 
     register: async (userData) => {

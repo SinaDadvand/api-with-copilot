@@ -16,17 +16,30 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
-
   const login = (authData) => {
-    // Handle the new response structure
-    const token = authData.token;
+    // Handle the backend response structure with access_token
+    const token = authData.access_token || authData.token;
+    if (!token) {
+      throw new Error('No access token received from server');
+    }
     localStorage.setItem('token', token);
     setToken(token);
     setIsAuthenticated(true);
+    
+    // Store refresh token if provided
+    if (authData.refresh_token) {
+      localStorage.setItem('refresh_token', authData.refresh_token);
+    }
+    
+    // Store user data if provided
+    if (authData.user) {
+      localStorage.setItem('user', JSON.stringify(authData.user));
+    }
   };
-
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
     setToken(null);
     setIsAuthenticated(false);
   };
