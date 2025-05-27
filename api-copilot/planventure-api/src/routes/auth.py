@@ -12,20 +12,31 @@ def register():
     """Register a new user with email verification."""
     data = request.get_json()
     
-    # Validate required fields
-    required_fields = ['username', 'email', 'password']
+    # Validate required fields - username is optional, will be generated from email
+    required_fields = ['email', 'password']
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
     
-    # Check if username or email already exists
-    if User.query.filter_by(username=data['username']).first():
+    # Generate username from email if not provided
+    username = data.get('username')
+    if not username:
+        # Extract username from email (part before @)
+        username = data['email'].split('@')[0]
+        # Ensure username is unique
+        base_username = username
+        counter = 1
+        while User.query.filter_by(username=username).first():
+            username = f"{base_username}{counter}"
+            counter += 1
+      # Check if username or email already exists
+    if User.query.filter_by(username=username).first():
         return jsonify({'error': 'Username already taken'}), 400
-    # if User.query.filter_by(email=data['email']).first():
-    #     return jsonify({'error': 'Email already registered'}), 400
-    
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'Email already registered'}), 400
+        
     # Create new user
     user = User(        
-        username=data['username'],
+        username=username,
         email=data['email'],
         email_verified=False,
         email_verification_token=secrets.token_urlsafe(32),
