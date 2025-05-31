@@ -7,8 +7,7 @@ const ThemeToggle = () => {
   const { darkMode, toggleTheme } = useAppTheme();
 
   return (
-    <Tooltip title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}>
-      <IconButton 
+    <Tooltip title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}>      <IconButton 
         onClick={toggleTheme} 
         color="inherit"
         sx={{
@@ -17,14 +16,16 @@ const ThemeToggle = () => {
           '&:hover': {
             transform: 'rotate(180deg)',
             borderColor: 'primary.main',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: (theme) => theme.palette.mode === 'dark' 
+              ? 'rgba(88, 166, 255, 0.1)' 
+              : 'rgba(25, 118, 210, 0.1)',
           },
         }}
       >
         {darkMode ? (
-          <Brightness7 sx={{ color: '#ffd700' }} />
+          <Brightness7 sx={{ color: '#fd7e14' }} />
         ) : (
-          <Brightness4 sx={{ color: '#555' }} />
+          <Brightness4 sx={{ color: '#6e7681' }} />
         )}
       </IconButton>
     </Tooltip>
