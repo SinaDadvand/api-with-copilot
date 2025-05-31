@@ -12,13 +12,20 @@ const ThemeToggle = () => {
         onClick={toggleTheme} 
         color="inherit"
         sx={{
-          transition: 'transform 0.2s ease-in-out',
+          transition: 'all 0.3s ease-in-out',
+          border: '1px solid transparent',
           '&:hover': {
             transform: 'rotate(180deg)',
+            borderColor: 'primary.main',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
           },
         }}
       >
-        {darkMode ? <Brightness7 /> : <Brightness4 />}
+        {darkMode ? (
+          <Brightness7 sx={{ color: '#ffd700' }} />
+        ) : (
+          <Brightness4 sx={{ color: '#555' }} />
+        )}
       </IconButton>
     </Tooltip>
   );
