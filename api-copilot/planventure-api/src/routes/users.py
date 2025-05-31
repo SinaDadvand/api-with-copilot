@@ -43,22 +43,13 @@ def get_user(user_id):
 def login():
     data = request.get_json()
     
-    # Accept either email or username
-    email_or_username = data.get('email') or data.get('username')
-    password = data.get('password')
-    
-    if not data or not email_or_username or not password:
-        return jsonify({'error': 'Missing email/username or password'}), 400
+    if not data or not data.get('email') or not data.get('password'):
+        return jsonify({'error': 'Missing email or password'}), 400
         
-    # Try to find user by email first, then by username
-    user = User.query.filter_by(email=email_or_username).first()
-    if not user:
-        user = User.query.filter_by(username=email_or_username).first()
-        
-    if not user or not user.check_password(password):
-        return jsonify({'error': 'Invalid credentials'}), 401
-        
-    # Update last login timestamp
+    user = User.query.filter_by(email=data['email']).first()
+    if not user or not user.check_password(data['password']):
+        return jsonify({'error': 'Invalid email or password'}), 401
+      # Update last login timestamp
     user.last_login = datetime.now(timezone.utc)
     db.session.commit()
     
