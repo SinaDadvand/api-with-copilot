@@ -84,10 +84,9 @@ const navigate = useNavigate();
         Try Again
       </Button>
     </Box>
-  );
-  return (
-    <Box sx={{ width: '100%', p: { xs: 2, sm: 3 } }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+  );  return (
+    <Box sx={{ width: '100%', height: '100%' }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3 }}>
         My Trips
       </Typography>
       <Paper
@@ -96,7 +95,8 @@ const navigate = useNavigate();
           p: 3,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '60vh'
+          minHeight: '70vh',
+          width: '100%'
         }}
       >
         <TripList

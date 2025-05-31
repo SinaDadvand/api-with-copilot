@@ -1,8 +1,7 @@
 import { Box, Container, Typography, Link, Stack } from '@mui/material';
 
 const Footer = () => {
-  return (
-    <Box
+  return (    <Box
       component="footer"
       sx={{
         py: 3,
@@ -12,7 +11,9 @@ const Footer = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: (theme) => theme.palette.grey[100],
+        backgroundColor: 'background.paper',
+        borderTop: 1,
+        borderColor: 'divider',
         zIndex: 1000
       }}
     >

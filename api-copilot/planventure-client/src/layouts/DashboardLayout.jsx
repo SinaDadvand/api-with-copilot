@@ -91,9 +91,8 @@ const DashboardLayout = ({ children }) => {
       </List>
     </Box>
   );
-
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar>
         <IconButton
           color="inherit"
@@ -106,60 +105,65 @@ const DashboardLayout = ({ children }) => {
         </IconButton>
       </Navbar>
       
-      <Box
-        component="nav"
-        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
-      >
-        {/* Mobile drawer */}
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: DRAWER_WIDTH,
-              height: 'calc(100vh - 56px)', // Subtract footer height
-              marginTop: '64px' // Account for navbar
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        
-        {/* Desktop drawer */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
-              width: DRAWER_WIDTH,
-              borderRight: '1px solid rgba(0, 0, 0, 0.12)',
-              marginTop: '64px', // Navbar height
-              height: 'calc(100vh - 78px - 58px)', // Subtract navbar (64px) and footer (56px) heights
-              overflowY: 'auto' // Add scrolling for overflow content
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+      <Box sx={{ display: 'flex', flexGrow: 1 }}>
         <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: { xs: 2, sm: 3 },
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          marginTop: '64px',
-          minHeight: 'calc(100vh - 64px)', // Full viewport height minus navbar
-          backgroundColor: 'background.default'
-        }}
-      >
-        {children}
+          component="nav"
+          sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
+        >
+          {/* Mobile drawer */}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+              display: { xs: 'block', sm: 'none' },
+              '& .MuiDrawer-paper': { 
+                boxSizing: 'border-box', 
+                width: DRAWER_WIDTH,
+                height: 'calc(100vh - 64px)', // Subtract navbar height
+                marginTop: '64px' // Account for navbar
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+          
+          {/* Desktop drawer */}
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              '& .MuiDrawer-paper': { 
+                boxSizing: 'border-box', 
+                width: DRAWER_WIDTH,
+                borderRight: '1px solid',
+                borderColor: 'divider',
+                marginTop: '64px', // Navbar height
+                height: 'calc(100vh - 64px)', // Full height minus navbar
+                overflowY: 'auto' // Add scrolling for overflow content
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: { xs: 2, sm: 3 },
+            width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+            marginTop: '64px',
+            minHeight: 'calc(100vh - 64px)', // Full viewport height minus navbar
+            backgroundColor: 'background.default',
+            overflowX: 'auto' // Allow horizontal scrolling if needed
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Box>
   );

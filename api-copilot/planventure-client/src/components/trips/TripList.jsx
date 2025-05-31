@@ -40,17 +40,18 @@ const TripList = ({ WelcomeMessage, ErrorState }) => {
     };
 
     fetchTrips();
-  }, []);
-  // Loading state with skeleton cards
+  }, []);  // Loading state with skeleton cards
   if (loading) {
     return (
-      <Grid container spacing={3}>
-        {[1, 2, 3, 4, 5, 6].map((skeleton) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={skeleton}>
-            <TripCard loading={true} />
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{ width: '100%' }}>
+        <Grid container spacing={3} sx={{ width: '100%' }}>
+          {[1, 2, 3, 4, 5, 6].map((skeleton) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={skeleton}>
+              <TripCard loading={true} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     );
   }
 
@@ -62,34 +63,41 @@ const TripList = ({ WelcomeMessage, ErrorState }) => {
   // Empty state
   if (trips.length === 0) {
     return <WelcomeMessage />;
-  }
-  // Loaded state with trips
+  }  // Loaded state with trips
   return (
-    <Grid container spacing={3}>
-      {trips.map((trip) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={trip.id}>
-          <TripCard trip={trip} />
+    <Box sx={{ width: '100%' }}>
+      <Grid container spacing={3} sx={{ width: '100%' }}>
+        {trips.map((trip) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={trip.id}>
+            <TripCard trip={trip} />
+          </Grid>
+        ))}
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <Button
+            variant="outlined"
+            fullWidth
+            sx={{ 
+              height: '100%', 
+              minHeight: 200,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderStyle: 'dashed',
+              borderWidth: 2,
+              '&:hover': {
+                borderStyle: 'solid',
+                backgroundColor: 'action.hover'
+              }
+            }}
+            onClick={() => navigate('/trips/new')}
+          >
+            <AddIcon sx={{ mb: 1, fontSize: 32 }} />
+            <Typography variant="body1" fontWeight="medium">Add New Trip</Typography>
+          </Button>
         </Grid>
-      ))}
-      <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
-        <Button
-          variant="outlined"
-          fullWidth
-          sx={{ 
-            height: '100%', 
-            minHeight: 200,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onClick={() => navigate('/trips/new')}
-        >
-          <AddIcon sx={{ mb: 1 }} />
-          <Typography>Add New Trip</Typography>
-        </Button>
       </Grid>
-    </Grid>
+    </Box>
   );
 };
 

@@ -6,15 +6,22 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="sm">
-      <Box 
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          py: 4,
-        }}
-      >
+    <Box sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      minHeight: 'calc(100vh - 128px)',
+      py: 4 
+    }}>
+      <Container maxWidth="sm">
+        <Box 
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            py: 4,
+          }}
+        >
         <img 
           src={planventureLogo} 
           alt="Planventure Logo"
@@ -50,10 +57,10 @@ const Home = () => {
           onClick={() => navigate('/login')}
           sx={{ mt: 2 }}
         >
-          Get Started
-        </Button>
+          Get Started        </Button>
       </Box>
     </Container>
+    </Box>
   );
 };
 
