@@ -41,13 +41,12 @@ const TripList = ({ WelcomeMessage, ErrorState }) => {
 
     fetchTrips();
   }, []);
-
   // Loading state with skeleton cards
   if (loading) {
     return (
       <Grid container spacing={3}>
-        {[1, 2, 3].map((skeleton) => (
-          <Grid item xs={12} sm={6} md={4} key={skeleton}>
+        {[1, 2, 3, 4, 5, 6].map((skeleton) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={skeleton}>
             <TripCard loading={true} />
           </Grid>
         ))}
@@ -64,16 +63,15 @@ const TripList = ({ WelcomeMessage, ErrorState }) => {
   if (trips.length === 0) {
     return <WelcomeMessage />;
   }
-
   // Loaded state with trips
   return (
     <Grid container spacing={3}>
       {trips.map((trip) => (
-        <Grid item xs={12} sm={6} md={4} key={trip.id}>
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={trip.id}>
           <TripCard trip={trip} />
         </Grid>
       ))}
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
         <Button
           variant="outlined"
           fullWidth

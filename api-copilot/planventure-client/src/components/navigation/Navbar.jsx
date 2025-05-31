@@ -1,6 +1,7 @@
 import { AppBar, Box, Toolbar, Typography, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const Navbar = () => {
           onClick={() => navigate('/')}
         >
           Planventure
-        </Typography>
-        <Stack direction="row" spacing={2}>
+        </Typography>        <Stack direction="row" spacing={2} alignItems="center">
+          <ThemeToggle />
           {isAuthenticated ? (
             <>
               <Button 
@@ -48,7 +49,7 @@ const Navbar = () => {
               >
                 Login
               </Button>
-              <Button 
+              <Button
                 color="inherit" 
                 variant="outlined" 
                 onClick={() => navigate('/signup')}

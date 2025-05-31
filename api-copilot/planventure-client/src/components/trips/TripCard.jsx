@@ -34,11 +34,21 @@ const TripCard = ({ trip, loading }) => {
       </Card>
     );
   }
-
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5" component="h2">
+    <Card 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: 3,
+        },
+      }}
+    >
+      <CardContent sx={{ flexGrow: 1, p: 3 }}>
+        <Typography gutterBottom variant="h5" component="h2" sx={{ fontWeight: 600 }}>
           {trip.title}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -53,12 +63,28 @@ const TripCard = ({ trip, loading }) => {
             {new Date(trip.start_date).toLocaleDateString()} - {new Date(trip.end_date).toLocaleDateString()}
           </Typography>
         </Box>
+        {trip.description && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {trip.description.length > 100 
+              ? `${trip.description.substring(0, 100)}...` 
+              : trip.description
+            }
+          </Typography>
+        )}
+        <Chip 
+          label={trip.status || 'Planning'} 
+          size="small" 
+          color="primary" 
+          variant="outlined"
+        />
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ p: 2, pt: 0 }}>
         <Button 
           size="small" 
           endIcon={<ArrowForward />}
           onClick={() => navigate(`/trips/${trip.id}`)}
+          fullWidth
+          variant="outlined"
         >
           View Details
         </Button>

@@ -148,14 +148,15 @@ const DashboardLayout = ({ children }) => {
           {drawer}
         </Drawer>
       </Box>
-      
-      <Box
+        <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          p: { xs: 2, sm: 3 },
           width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          marginTop: '64px'
+          marginTop: '64px',
+          minHeight: 'calc(100vh - 64px)', // Full viewport height minus navbar
+          backgroundColor: 'background.default'
         }}
       >
         {children}
